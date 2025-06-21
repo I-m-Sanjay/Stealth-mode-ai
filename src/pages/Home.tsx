@@ -203,11 +203,11 @@ function Home() {
                             {[BlogImg1, BlogImg2, BlogImg3, BlogImg4, BlogImg5].map((img, index) => (
                                 <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                                     <div className="p-1">
-                                        <div className="rounded-lg overflow-hidden h-96 bg-gray-200/10 flex items-center justify-center">
+                                        <div className="rounded-lg overflow-hidden h-96 flex items-center justify-center">
                                             <img
                                                 src={img}
                                                 alt={`Blog ${index + 1}`}
-                                                className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity"
+                                                className="w-full h-full object-cover"
                                             />
                                         </div>
                                     </div>
