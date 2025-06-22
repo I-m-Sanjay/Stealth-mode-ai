@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 import stealthLogo from '../../assets/Stealth.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 interface HeaderProps {
   className?: string;
@@ -47,7 +47,7 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
       {/* Desktop Navigation */}
       <nav className="hidden lg:block">
         <ul className="flex space-x-10">
-          <li><a href="#" className="text-white text-base hover:text-blue-100 transition-colors">Features</a></li>
+          <li><Link to="/feature" className="text-white text-base hover:text-blue-100 transition-colors">Features</Link></li>
           <li><a href="#" className="text-white text-base hover:text-blue-100 transition-colors">Developers</a></li>
           <li><a href="#" className="text-white text-base hover:text-blue-100 transition-colors">Company</a></li>
           <li><a href="#" className="text-white text-base hover:text-blue-100 transition-colors">Concepts</a></li>
@@ -66,7 +66,7 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
       {/* Mobile Navigation */}
       <nav className={`lg:hidden absolute top-[72px] left-0 w-full bg-[#157eb3] transition-all duration-300 ease-in-out z-50 ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
         <ul className="flex flex-col p-4">
-          <li className="py-2 text-red-500"><a href="#" className="text-white text-base hover:text-blue-100 transition-colors block">Features</a></li>
+          <li className="py-2 text-red-500"><Link to="/feature" className="text-white text-base hover:text-blue-100 transition-colors block" onClick={() => setIsMenuOpen(false)}>Features</Link></li>
           <li className="py-2"><a href="#" className="text-white text-base hover:text-blue-100 transition-colors block">Developers</a></li>
           <li className="py-2"><a href="#" className="text-white text-base hover:text-blue-100 transition-colors block">Company</a></li>
           <li className="py-2"><a href="#" className="text-white text-base hover:text-blue-100 transition-colors block">Concepts</a></li>

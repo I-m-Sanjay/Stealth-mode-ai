@@ -5,6 +5,7 @@ import SignUp from "../pages/SignUp";
 import Source from "../pages/Source";
 import ForgetPassword from "../pages/ForgetPassword";
 import ResetPassword from "../pages/ResetPassword";
+import Feature from "../pages/Feature";
 
 function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ function AppRoutes() {
             <Route path="/source" element={<Source />} />
             <Route path="/forgot-password" element={<ForgetPassword/>}/>
             <Route path="/reset-password/:token" element={<ResetPassword/>}/>
+            <Route path="/feature" element={<Feature/>}/>
         </Routes>
     </BrowserRouter>
   );
