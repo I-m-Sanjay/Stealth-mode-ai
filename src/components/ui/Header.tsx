@@ -19,9 +19,14 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
     <header className={`w-full  px-4 md:px-8 lg:px-12 pt-5 py-3 flex items-center justify-between  ${className}`}>
       <div className="flex items-center">
         {/* <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: '#d9d9d9' }}> */}
+        <div 
+          className="flex items-center cursor-pointer" 
+          onClick={() => navigate('/')}
+        >
           <img src={stealthLogo} alt="Stealth Mode AI" className="h-15 w-15" style={{ background: 'transparent'}} />
+          <span className="ml-2 text-[20px] font-bold text-white whitespace-nowrap">Stealth mode AI</span>
+        </div>
         {/* </div> */}
-        <span className="ml-2 text-[20px] font-bold text-white whitespace-nowrap">Stealth mode AI</span>
       </div>
 
       {/* Mobile menu button */}

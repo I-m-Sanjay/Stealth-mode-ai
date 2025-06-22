@@ -21,7 +21,7 @@ function Feature() {
                         <p className="font-semibold text-2xl text-white border-b-2 border-[#99c6e0] inline-block px-2">
                             Features
                         </p>
-                        <h1 className="text-4xl md:text-5xl font-bold text-white">
+                        <h1 className="text-4xl md:text-4xl font-bold text-white">
                             AI-Powered{" "}
                             <span style={{ color: "#002e47" }}>Website Generation</span>
                         </h1>
