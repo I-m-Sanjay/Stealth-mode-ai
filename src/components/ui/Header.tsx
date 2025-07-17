@@ -257,7 +257,7 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
           <li className="pt-2 border-t border-white/20">
             {isAuthenticated ? (
               <button
-                className="w-full bg-red-600 text-white font-semibold rounded-full px-5 py-2 shadow-sm hover:bg-red-700 transition-colors"
+                className="w-full bg-white text-black font-semibold rounded-full px-5 py-2 shadow-sm hover:bg-gray-100 transition-colors"
                 onClick={handleLogout}
               >
                 Logout
