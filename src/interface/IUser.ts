@@ -20,3 +20,18 @@ export interface SignUpResponse {
   success: boolean;
   message: string;
 }
+
+export interface UserProfile {
+  _id: string;
+  email: string;
+  name: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface UserProfileResponse {
+  message: string;
+  user: UserProfile;
+}

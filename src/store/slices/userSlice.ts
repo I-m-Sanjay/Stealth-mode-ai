@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { ILoginResponse, IUserSlice } from '../../interface/IAuth';
+import type { UserProfileResponse } from '../../interface/IUser';
 
 const initialState: IUserSlice = {
   data: null,
@@ -30,8 +31,18 @@ export const userSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    updateUserProfile: (state, action: PayloadAction<UserProfileResponse>) => {
+      if (state.data) {
+        // Update the user data with profile information
+        state.data.data = {
+          ...state.data.data,
+          userName: action.payload.user.name,
+          email: action.payload.user.email,
+        };
+      }
+    },
   },
 });
 
-export const { login, logout, setLoading, setError } = userSlice.actions;
+export const { login, logout, setLoading, setError, updateUserProfile } = userSlice.actions;
 export default userSlice.reducer; 
