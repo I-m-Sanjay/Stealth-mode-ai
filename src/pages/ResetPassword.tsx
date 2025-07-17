@@ -13,7 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { object, string, ref } from 'yup';
-import { resetPassword } from '../api/services/user.service';
+// import { resetPassword } from '../api/services/user.service';
 
 const resetPasswordValidationSchema = object().shape({
   newPassword: string()
@@ -33,44 +33,44 @@ const ResetPassword: FC = () => {
   const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
 
-  const handleResetPassword = async (values: { newPassword: string; confirmPassword: string }) => {
-    try {
-      setIsLoading(true);
-      setError(null);
+  // const handleResetPassword = async (values: { newPassword: string; confirmPassword: string }) => {
+  //   try {
+  //     setIsLoading(true);
+  //     setError(null);
       
-      if (!token) {
-        setError('Reset token is missing. Please use the link from your email.');
-        return;
-      }
+  //     if (!token) {
+  //       setError('Reset token is missing. Please use the link from your email.');
+  //       return;
+  //     }
       
-      console.log('Password reset with token:', token);
+  //     console.log('Password reset with token:', token);
       
-      // Call the reset password API
-      await resetPassword(token, {
-        password: values.newPassword,
-        confirmPassword: values.confirmPassword
-      });
+  //     // Call the reset password API
+  //     await resetPassword(token, {
+  //       password: values.newPassword,
+  //       confirmPassword: values.confirmPassword
+  //     });
       
-      // Show success toast
-      toast.success('Password reset successfully!', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+  //     // Show success toast
+  //     toast.success('Password reset successfully!', {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //     });
       
-      // Navigate to login page after short delay
-      setTimeout(() => navigate('/login'), 3000);
+  //     // Navigate to login page after short delay
+  //     setTimeout(() => navigate('/login'), 3000);
       
-    } catch (error: any) {
-      console.error('Password reset failed:', error);
-      setError(error.response?.data?.message || 'Password reset failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   } catch (error: any) {
+  //     console.error('Password reset failed:', error);
+  //     setError(error.response?.data?.message || 'Password reset failed. Please try again.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-[#1C8DC9] relative">
@@ -93,7 +93,7 @@ const ResetPassword: FC = () => {
               <Formik
                 initialValues={{ newPassword: '', confirmPassword: '' }}
                 validationSchema={resetPasswordValidationSchema}
-                onSubmit={handleResetPassword}
+                onSubmit={() => {}}
               >
                 {({ errors, touched }) => (
                   <Form>

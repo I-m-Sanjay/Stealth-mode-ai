@@ -1,24 +1,25 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import SignUp from "../pages/SignUp";
-import Source from "../pages/Source";
-import ForgetPassword from "../pages/ForgetPassword";
-import ResetPassword from "../pages/ResetPassword";
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAppSelector } from '../store/hooks';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import ForgetPassword from '../pages/ForgetPassword';
+import SignUp from '../pages/SignUp';
 
-function AppRoutes() {
+const AppRoutes = () => {
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+
   return (
-    <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/source" element={<Source />} />
-            <Route path="/forgot-password" element={<ForgetPassword/>}/>
-            <Route path="/reset-password/:token" element={<ResetPassword/>}/>
-        </Routes>
-    </BrowserRouter>
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/forget-password" element={<ForgetPassword />} />
+      <Route path="/signup" element={<SignUp />} />
+      
+      {/* Catch all route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
-}
+};
 
 export default AppRoutes;

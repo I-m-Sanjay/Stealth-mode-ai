@@ -1,0 +1,31 @@
+import type { ILoginCredentials, ILoginResponse } from '../../interface/IAuth';
+import type { SignUpPayload, SignUpResponse } from '../../interface/IUser';
+import { AUTH_LOGIN_URL, AUTH_SIGN_API } from '../../constants/apiConstants';
+import axiosInstance from '../axiosInstance';
+
+export const doLogin = async (loginPayload: ILoginCredentials): Promise<ILoginResponse> => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .post(AUTH_LOGIN_URL, loginPayload)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const doSignUp = async (signUpPayload: SignUpPayload): Promise<SignUpResponse> => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .post(AUTH_SIGN_API, signUpPayload)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+

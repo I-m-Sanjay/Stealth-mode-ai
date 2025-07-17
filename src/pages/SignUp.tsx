@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import type { SignUpFormValues } from '../interface/IUser';
 import { signUpValidationSchema } from '../validationSchema/ValidationSchema';
-import { userSignUp } from '../api/services/user.service';
+import { doSignUp } from '../api/services/authService';
 
 const SignUp: FC = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -38,10 +38,14 @@ const SignUp: FC = () => {
         setError(null);
 
         try {
-            // Remove confirmPassword before sending to API
-            const { confirmPassword, ...signUpData } = values;
-            const response = await userSignUp(signUpData);
-            console.log('Sign up successful:', response.data);
+            const { userName, email, password } = values;
+            const signUpData = {
+                name: userName,
+                email: email,
+                password: password
+            };
+            const response = await doSignUp(signUpData);
+            console.log('Sign up successful:', response);
 
             // Show success toast
             toast.success('Account created successfully! Please login to continue.', {

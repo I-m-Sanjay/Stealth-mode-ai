@@ -18,31 +18,17 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import type { LoginForm } from '../interface/IUser';
 import { loginValidationSchema } from '../validationSchema/ValidationSchema';
-import { userLogin } from '../api/services/user.service';
+import { useLogin } from '../hooks/useLogin';
 
 const Login: FC = () => {
-  // const [username, setUsername] = useState('');
-  // const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { loading, error, processLogin } = useLogin();
   const navigate = useNavigate();
 
-  // const handleLogin = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   Handle login logic here
-  // };
-
   const handleLogin = async (values: LoginForm) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      console.log('Login button clicked', values);
-      
-      const response = await userLogin(values);
-      console.log('Login successful:', response.data);
-      
-      // Show success toast
+    const isSuccess = await processLogin(values);
+    
+    if (isSuccess) {
       toast.success('Login successful! Welcome back!', {
         position: "top-center",
         autoClose: 3000,
@@ -51,23 +37,17 @@ const Login: FC = () => {
         pauseOnHover: true,
         draggable: true,
       });
-      
-      // Handle successful login here
-      // You might want to store the token in localStorage or Redux store
-      // localStorage.setItem('token', response.data.token);
-      
-      // Navigate to home page or dashboard
-      navigate('/');
-      
-    } catch (error: any) {
-      console.error('Login failed:', error);
-      setError(error.response?.data?.message || 'Login failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+    } else {
+      toast.error(error || 'Login failed. Please try again.', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
-
-
 
   return (
     <div className="min-h-screen bg-[#1C8DC9] relative">
@@ -161,10 +141,10 @@ const Login: FC = () => {
                       <CustomButton
                         type="submit"
                         variant="contained"
-                        disabled={isLoading}
+                        disabled={loading}
                         className="w-full sm:w-auto"
                       >
-                        {isLoading ? 'Logging in...' : 'Login Now'}
+                        {loading ? 'Logging in...' : 'Login Now'}
                       </CustomButton>
                     </div>
                   </Form>

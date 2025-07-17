@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { object, string } from 'yup';
-import { forgetPassword } from '../api/services/user.service';
+// import { forgetPassword } from '../api/services/user.service';
 
 const forgotPasswordValidationSchema = object().shape({
   email: string()
@@ -24,35 +24,35 @@ const ForgetPassword: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleResetPassword = async (values: { email: string }) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      console.log('Reset password requested for:', values.email);
+  // const handleResetPassword = async (values: { email: string }) => {
+  //   try {
+  //     setIsLoading(true);
+  //     setError(null);
+  //     console.log('Reset password requested for:', values.email);
       
-      // Call the forget password API
-      await forgetPassword({ email: values.email });
+  //     // Call the forget password API
+  //     await forgetPassword({ email: values.email });
       
-      // Show success toast
-      toast.success('Password reset link sent to your email!', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+  //     // Show success toast
+  //     toast.success('Password reset link sent to your email!', {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //     });
       
-      // Navigate back to login page after short delay
-      // setTimeout(() => navigate('/login'), 3000);
+  //     // Navigate back to login page after short delay
+  //     // setTimeout(() => navigate('/login'), 3000);
       
-    } catch (error: any) {
-      console.error('Password reset failed:', error);
-      setError(error.response?.data?.message || 'Password reset failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   } catch (error: any) {
+  //     console.error('Password reset failed:', error);
+  //     setError(error.response?.data?.message || 'Password reset failed. Please try again.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-[#1C8DC9] relative">
@@ -75,7 +75,7 @@ const ForgetPassword: FC = () => {
               <Formik
                 initialValues={{ email: '' }}
                 validationSchema={forgotPasswordValidationSchema}
-                onSubmit={handleResetPassword}
+                onSubmit={() => {}}
               >
                 {({ errors, touched }) => (
                   <Form>

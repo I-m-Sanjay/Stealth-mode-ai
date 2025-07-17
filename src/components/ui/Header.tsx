@@ -2,6 +2,9 @@ import type { FC } from 'react';
 import { useState } from 'react';
 import stealthLogo from '../../assets/Stealth.png';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { logout } from '../../store/slices/userSlice';
+import { toast } from 'react-toastify';
 
 interface HeaderProps {
   className?: string;
@@ -10,9 +13,24 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = ({ className = '' }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success('Logged out successfully!', {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+    navigate('/');
   };
 
   return (
@@ -55,13 +73,22 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
         </ul>
       </nav>
 
-      {/* Login Button - Desktop */}
-      <button
+      {/* Login/Logout Button - Desktop */}
+      {isAuthenticated ? (
+        <button
         className="hidden lg:inline-block bg-white text-black font-semibold rounded-full px-6 py-2 ml-6 shadow-sm hover:bg-gray-100 transition-colors"
-        onClick={() => navigate('/login')}
-      >
-        Login
-      </button>
+        onClick={handleLogout}
+        >
+          Logout
+        </button>
+      ) : (
+        <button
+          className="hidden lg:inline-block bg-white text-black font-semibold rounded-full px-6 py-2 ml-6 shadow-sm hover:bg-gray-100 transition-colors"
+          onClick={() => navigate('/login')}
+        >
+          Login
+        </button>
+      )}
 
       {/* Mobile Navigation */}
       <nav className={`lg:hidden absolute top-[72px] left-0 w-full bg-[#157eb3] transition-all duration-300 ease-in-out z-50 ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
@@ -72,15 +99,27 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
           <li className="py-2"><a href="#" className="text-white text-base hover:text-blue-100 transition-colors block">Concepts</a></li>
           <li className="py-2"><a href="#" className="text-white text-base hover:text-blue-100 transition-colors block">Subscription</a></li>
           <li className="py-2">
-            <button
-              className="w-full bg-white text-black font-semibold rounded-full px-5 py-1 mt-2 shadow-sm hover:bg-gray-100 transition-colors"
-              onClick={() => {
-                setIsMenuOpen(false);
-                navigate('/login');
-              }}
-            >
-              Login
-            </button>
+            {isAuthenticated ? (
+              <button
+                className="w-full bg-red-600 text-white font-semibold rounded-full px-5 py-1 mt-2 shadow-sm hover:bg-red-700 transition-colors"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  handleLogout();
+                }}
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                className="w-full bg-white text-black font-semibold rounded-full px-5 py-1 mt-2 shadow-sm hover:bg-gray-100 transition-colors"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate('/login');
+                }}
+              >
+                Login
+              </button>
+            )}
           </li>
         </ul>
       </nav>
