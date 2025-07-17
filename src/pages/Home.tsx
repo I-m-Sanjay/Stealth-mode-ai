@@ -3,7 +3,7 @@ import FlowImg from "../assets/Group 1000005228.png";
 import FirstBackgroundImg from "../assets/FirstBackground.jpg";
 import SecondBackgroundImg from "../assets/SecondBackground.jpg";
 import RocketImg from "../assets/Rocket.png";
-import light from "../assets/light.png";
+import light from "../assets/Light.png";
 import LaptopImg from "../assets/Laptop.png";
 import AIImg from "../assets/AI.png";
 import MobileImg from "../assets/Mobile.png";
@@ -12,6 +12,19 @@ import Footer from "../components/ui/Footer";
 import PublicIcon from '@mui/icons-material/Public';
 import AndroidIcon from '@mui/icons-material/Android';
 import { useNavigate } from 'react-router-dom';
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "../components/ui/carousel";
+
+import BlogImg1 from "../assets/BackgroundImg-2.jpg";
+import BlogImg2 from "../assets/FirstBackground.jpg";
+import BlogImg3 from "../assets/login-background-img.png";
+import BlogImg4 from "../assets/Robot-img.png";
+import BlogImg5 from "../assets/AI.png";
 
 
 function Home() {
@@ -170,82 +183,119 @@ function Home() {
             </div>
 
             {/* DIV 4 */}
-            <div className="bg-[#157eb3] py-6 sm:py-8 space-y-4 sm:space-y-6">
-                {/* First Row - Left to Right (Updated Design) */}
-                <div className="overflow-hidden">
-                    <div className="flex gap-2 sm:gap-4 animate-scroll-right whitespace-nowrap">
-                        {[1, 2].map((set) => (
-                            <div key={`row1-${set}`} className="flex gap-2 sm:gap-4 items-center">
-                                {[
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                ].map((item, index) => (
-                                    <div
-                                        key={`row1-${set}-${index}`}
-                                        className="px-3 sm:px-6 py-2 sm:py-3 bg-white rounded-lg flex items-center gap-1 sm:gap-2 shadow-md min-w-[150px] sm:min-w-[200px] justify-center"
-                                    >
-                                        <span className="text-sm sm:text-base">{item.icon}</span>
-                                        <span className="text-gray-800 font-medium text-xs sm:text-sm md:text-base">{item.text}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+            <div className="bg-[#3c96c7] py-16">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-white font-bold text-3xl sm:text-4xl">Our Blog</h2>
+                        <p className="text-white mt-4 text-lg">
+                            "Don't focus on having a great blog. <br/> Focus on producing a blog that's great for your readers."
+                        </p>
                     </div>
+
+                    <Carousel
+                        opts={{
+                            align: "start",
+                            loop: true,
+                        }}
+                        className="w-full max-w-6xl mx-auto"
+                    >
+                        <CarouselContent className="-ml-4">
+                            {[BlogImg1, BlogImg2, BlogImg3, BlogImg4, BlogImg5].map((img, index) => (
+                                <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                                    <div className="p-1">
+                                        <div className="rounded-lg overflow-hidden h-96 flex items-center justify-center">
+                                            <img
+                                                src={img}
+                                                alt={`Blog ${index + 1}`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="absolute top-1/2 -translate-y-1/2 left-2 sm:left-4 bg-transparent hover:bg-transparent border-none text-white rounded-full h-16 w-16" />
+                        <CarouselNext className="absolute top-1/2 -translate-y-1/2 right-2 sm:right-4 bg-transparent hover:bg-transparent border-none text-white rounded-full h-16 w-16" />
+                    </Carousel>
                 </div>
 
-                {/* Second Row - Right to Left (Updated Design) */}
-                <div className="overflow-hidden">
-                    <div className="flex gap-2 sm:gap-4 animate-scroll-left whitespace-nowrap">
-                        {[1, 2].map((set) => (
-                            <div key={`row2-${set}`} className="flex gap-2 sm:gap-4 items-center">
-                                {[
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                ].map((item, index) => (
-                                    <div
-                                        key={`row2-${set}-${index}`}
-                                        className="px-3 sm:px-6 py-2 sm:py-3 bg-white rounded-lg flex items-center gap-1 sm:gap-2 shadow-md min-w-[150px] sm:min-w-[200px] justify-center"
-                                    >
-                                        <span className="text-sm sm:text-base">{item.icon}</span>
-                                        <span className="text-gray-800 font-medium text-xs sm:text-sm md:text-base">{item.text}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+                <div className="mt-16 space-y-4 sm:space-y-6">
+                    {/* First Row - Left to Right (Updated Design) */}
+                    <div className="overflow-hidden">
+                        <div className="flex gap-2 sm:gap-4 animate-scroll-right whitespace-nowrap">
+                            {[1, 2].map((set) => (
+                                <div key={`row1-${set}`} className="flex gap-2 sm:gap-4 items-center">
+                                    {[
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                    ].map((item, index) => (
+                                        <div
+                                            key={`row1-${set}-${index}`}
+                                            className="px-3 sm:px-6 py-2 sm:py-3 bg-white rounded-lg flex items-center gap-1 sm:gap-2 shadow-md min-w-[150px] sm:min-w-[200px] justify-center"
+                                        >
+                                            <span className="text-sm sm:text-base">{item.icon}</span>
+                                            <span className="text-gray-800 font-medium text-xs sm:text-sm md:text-base">{item.text}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                {/* Third Row - Left to Right (Updated Design) */}
-                <div className="overflow-hidden">
-                    <div className="flex gap-2 sm:gap-4 animate-scroll-right-slow whitespace-nowrap">
-                        {[1, 2].map((set) => (
-                            <div key={`row3-${set}`} className="flex gap-2 sm:gap-4 items-center">
-                                {[
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                    { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
-                                    { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
-                                ].map((item, index) => (
-                                    <div
-                                        key={`row3-${set}-${index}`}
-                                        className="px-3 sm:px-6 py-2 sm:py-3 bg-white rounded-lg flex items-center gap-1 sm:gap-2 shadow-md min-w-[150px] sm:min-w-[200px] justify-center"
-                                    >
-                                        <span className="text-sm sm:text-base">{item.icon}</span>
-                                        <span className="text-gray-800 font-medium text-xs sm:text-sm md:text-base">{item.text}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+                    {/* Second Row - Right to Left (Updated Design) */}
+                    <div className="overflow-hidden">
+                        <div className="flex gap-2 sm:gap-4 animate-scroll-left whitespace-nowrap">
+                            {[1, 2].map((set) => (
+                                <div key={`row2-${set}`} className="flex gap-2 sm:gap-4 items-center">
+                                    {[
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                    ].map((item, index) => (
+                                        <div
+                                            key={`row2-${set}-${index}`}
+                                            className="px-3 sm:px-6 py-2 sm:py-3 bg-white rounded-lg flex items-center gap-1 sm:gap-2 shadow-md min-w-[150px] sm:min-w-[200px] justify-center"
+                                        >
+                                            <span className="text-sm sm:text-base">{item.icon}</span>
+                                            <span className="text-gray-800 font-medium text-xs sm:text-sm md:text-base">{item.text}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Third Row - Left to Right (Updated Design) */}
+                    <div className="overflow-hidden">
+                        <div className="flex gap-2 sm:gap-4 animate-scroll-right-slow whitespace-nowrap">
+                            {[1, 2].map((set) => (
+                                <div key={`row3-${set}`} className="flex gap-2 sm:gap-4 items-center">
+                                    {[
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                        { text: "Web Development", icon: <PublicIcon className="text-gray-700" /> },
+                                        { text: "App Development", icon: <AndroidIcon className="text-gray-700" /> },
+                                    ].map((item, index) => (
+                                        <div
+                                            key={`row3-${set}-${index}`}
+                                            className="px-3 sm:px-6 py-2 sm:py-3 bg-white rounded-lg flex items-center gap-1 sm:gap-2 shadow-md min-w-[150px] sm:min-w-[200px] justify-center"
+                                        >
+                                            <span className="text-sm sm:text-base">{item.icon}</span>
+                                            <span className="text-gray-800 font-medium text-xs sm:text-sm md:text-base">{item.text}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
