@@ -26,6 +26,9 @@ const ProjectHistory: React.FC<ProjectHistoryProps> = ({ projects: propProjects 
   // Get user data from Redux
   const { data: userData } = useAppSelector((state) => state.user);
 
+  // Simple flag to prevent duplicate API calls in React Strict Mode
+  const hasFetched = useRef(false);
+
   useEffect(() => {
     const fetchProjects = async () => {
       // If projects are passed as props, use them
@@ -40,6 +43,12 @@ const ProjectHistory: React.FC<ProjectHistoryProps> = ({ projects: propProjects 
         return;
       }
 
+      // Prevent duplicate calls in React Strict Mode
+      if (hasFetched.current) {
+        return;
+      }
+
+      hasFetched.current = true;
       setLoading(true);
       setError(null);
 
