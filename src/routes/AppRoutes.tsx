@@ -7,6 +7,7 @@ import SignUp from '../pages/SignUp';
 import Source from '../pages/Source';
 import Project from '../pages/Project';
 import ResetPassword from '../pages/ResetPassword';
+import WorkSpace from '../pages/WorkSpace';
 
 const AppRoutes = () => {
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
@@ -23,6 +24,7 @@ const AppRoutes = () => {
       
       {/* Protected Routes */}
       <Route path="/project" element={isAuthenticated ? <Project /> : <Navigate to="/login" replace />} />
+      <Route path="/workspace" element={isAuthenticated ? <WorkSpace /> : <Navigate to="/login" replace />} />
       
       {/* Catch all route */}
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -25,8 +25,8 @@ export const useLogin = () => {
         setIsSuccess(true);
         setErrorState(null);
         dispatch(setError(null));
-        // Navigate to dashboard or home page
-        navigate('/');
+        // Navigate to source page after successful login
+        navigate('/source');
         return true; // Return success
       } else {
         throw new Error(response.message || 'Login failed');
