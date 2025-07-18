@@ -130,7 +130,7 @@ const Login: FC = () => {
                       <div className="relative">
                         <button 
                           type="button"
-                          onClick={() => navigate('/forgot-password')}
+                          onClick={() => navigate('/forget-password')}
                           className="absolute right-0 top-2 text-[#1C8DC9] hover:text-[#1C8DC9] hover:underline text-sm cursor-pointer"
                         >
                           Forgot Password?

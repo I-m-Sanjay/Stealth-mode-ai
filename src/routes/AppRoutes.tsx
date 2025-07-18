@@ -14,7 +14,7 @@ const AppRoutes = () => {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/login" element={isAuthenticated ? <Navigate to="/source" replace /> : <Login />} />
       <Route path="/forget-password" element={<ForgetPassword />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/source" element={<Source />} />
