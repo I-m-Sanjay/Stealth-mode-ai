@@ -21,6 +21,15 @@ export interface ILoginResponse {
   accessToken: string;
 }
 
+export interface IForgotPasswordRequest {
+  email: string;
+}
+
+export interface IForgotPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface IUserSlice {
   data: null | ILoginResponse;
   isAuthenticated: boolean;

@@ -1,13 +1,13 @@
-import type { ILoginCredentials, ILoginResponse } from '../../interface/IAuth';
+import type { ILoginCredentials, ILoginResponse, IForgotPasswordRequest, IForgotPasswordResponse } from '../../interface/IAuth';
 import type { SignUpPayload, SignUpResponse } from '../../interface/IUser';
-import { AUTH_LOGIN_URL, AUTH_SIGN_API } from '../../constants/apiConstants';
+import { AUTH_LOGIN_URL, AUTH_SIGN_API, FORGOT_PASSWORD_URL } from '../../constants/apiConstants';
 import axiosInstance from '../axiosInstance';
 
 export const doLogin = async (loginPayload: ILoginCredentials): Promise<ILoginResponse> => {
   return new Promise((resolve, reject) => {
     axiosInstance
       .post(AUTH_LOGIN_URL, loginPayload)
-      .then((res) => {
+      .then((res)=> {
         resolve(res.data);
       })
       .catch((err) => {
@@ -20,6 +20,19 @@ export const doSignUp = async (signUpPayload: SignUpPayload): Promise<SignUpResp
   return new Promise((resolve, reject) => {
     axiosInstance
       .post(AUTH_SIGN_API, signUpPayload)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const ForgotPassword = async (forgotPasswordPayload: IForgotPasswordRequest): Promise<IForgotPasswordResponse> => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .post(FORGOT_PASSWORD_URL, forgotPasswordPayload)
       .then((res) => {
         resolve(res.data);
       })
