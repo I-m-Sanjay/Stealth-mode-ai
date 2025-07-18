@@ -10,7 +10,7 @@ export interface ILoginResponse {
     _id: string;
     email: string;
     password: string;
-    userName: string;
+    name: string;
     isActive: boolean;
     loginAttempts: number;
     createdAt: string;

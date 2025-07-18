@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import Header from "../components/ui/Header";
-// import ProjectHistory from "../components/ui/ProjectHistory";
+import ProjectHistory from "../components/ui/ProjectHistory";
 import AuthModal from "../components/ui/AuthModal";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/hooks";
@@ -235,22 +235,9 @@ function Source() {
 
         </div>
         {/* Project history section below chat input - only show when authenticated */}
-        {/* {isAuthenticated && (
-          <ProjectHistory
-            projects={[
-              "shop-smart-street-04",
-              "simple-react-admin-kit",
-              "ai-product-launchpad",
-              "dashboardify-lite",
-              "no-code-landing-builder",
-              "inventory-tracker-pro",
-              "nextgen-form-generator",
-              "chat-ai-ui-kit",
-              "ecom-optimizer",
-              "dev-tools-lab"
-            ]}
-          />
-        )} */}
+        {isAuthenticated && (
+          <ProjectHistory />
+        )}
       </div>
     </div>
   );
