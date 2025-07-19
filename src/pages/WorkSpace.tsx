@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import Header from "../components/ui/Header";
-import Footer from "../components/ui/Footer";
+// import Footer from "../components/ui/Footer";
 import { useAppSelector } from "../store/hooks";
 import { useNavigate } from "react-router-dom";
-import { getProjects, type IProject } from "../api/services/projectService";
+import { getProjects, updateProjectAPI, type IProject } from "../api/services/projectService";
+import ConfirmationModal from "../components/ui/ConfirmationModal";
+import { toast } from 'react-toastify';
 
 const sortOptions = [
   { label: "Newest First", value: "last_edited" },
@@ -24,6 +26,14 @@ function Workspace() {
   const [sort, setSort] = useState("last_edited");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
+
+  // State for project menu dropdown
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  // State for confirmation modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Simple flag to prevent duplicate API calls in React Strict Mode
   const hasFetched = useRef(false);
@@ -81,6 +91,91 @@ function Workspace() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [sortDropdownOpen]);
+
+  // Close project menu on outside click
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Element;
+      // Check if click is outside any project menu
+      if (!target.closest('.project-menu-container')) {
+        setOpenMenuId(null);
+      }
+    }
+    
+    if (openMenuId) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openMenuId]);
+
+  const handleMenuToggle = (projectId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    console.log('Menu toggle clicked for project:', projectId, 'Current openMenuId:', openMenuId);
+    setOpenMenuId(openMenuId === projectId ? null : projectId);
+  };
+
+  const handleDeleteClick = (projectId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setProjectToDelete(projectId);
+    setShowDeleteModal(true);
+    setOpenMenuId(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!projectToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await updateProjectAPI(projectToDelete, { isActive: false });
+      if (response.success) {
+        // Remove the project from the local state
+        setProjects(projects.filter(project => project._id !== projectToDelete));
+        setShowDeleteModal(false);
+        setProjectToDelete(null);
+        
+        // Show success toast
+        toast.success('Project deleted successfully!', {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      } else {
+        toast.error('Failed to delete project: ' + response.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      toast.error('Failed to delete project. Please try again.', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setProjectToDelete(null);
+  };
 
   const filteredProjects = projects.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
@@ -174,10 +269,46 @@ function Workspace() {
                 {filteredProjects.map((project) => (
                   <div
                     key={project._id}
-                    className="bg-[#faf7f2] border border-gray-200 rounded-xl shadow p-6 flex flex-col items-start hover:shadow-md transition cursor-pointer"
+                    className="bg-[#faf7f2] border border-gray-200 rounded-xl shadow p-6 flex flex-col items-start hover:shadow-md transition cursor-pointer relative"
                     onClick={() => navigate(`/project/${project._id}`)}
                   >
+                    {/* Three-dot menu button */}
+                    <div className="absolute top-3 right-3 project-menu-container">
+                      <button 
+                        onClick={(e) => handleMenuToggle(project._id, e)}
+                        className="p-1 hover:bg-gray-200 rounded-full transition-colors"
+                      >
+                        <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                        </svg>
+                      </button>
+                      
+                      {/* Dropdown menu */}
+                      {openMenuId === project._id && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl z-50">
+                          <div className="py-1">
+                            <button className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 transition-colors">
+                              <svg className="w-4 h-4 mr-3 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              </svg>
+                              Rename
+                            </button>
+                            <button 
+                              className="flex items-center w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors"
+                              onClick={(e) => handleDeleteClick(project._id, e)}
+                            >
+                              <svg className="w-4 h-4 mr-3 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <span className="font-semibold text-gray-800 text-lg truncate w-full mb-2">{project.name}</span>
+                    
                     <div className="flex items-center gap-2 mt-auto">
                       <span className="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center font-bold text-green-800 text-base">
                         {project.name.charAt(0).toUpperCase()}
@@ -194,6 +325,20 @@ function Workspace() {
           </div>
         </div>
       </div>
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Delete Project"
+        message="Are you sure you want to delete this project? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmButtonColor="bg-red-600 hover:bg-red-700"
+        isLoading={isDeleting}
+      />
+      
       {/* <Footer /> */}
     </div>
   );

@@ -1,4 +1,4 @@
-import { GET_PROJECTS_URL, PROJECT_URL } from '../../constants/apiConstants';
+import { GET_PROJECTS_URL, PROJECT_URL, UPDATE_PROJECT_URL } from '../../constants/apiConstants';
 import axiosInstance from '../axiosInstance';
 
 export interface IProject {
@@ -34,6 +34,18 @@ export interface ICreateProjectResponse {
   data: IProject;
 }
 
+export interface IUpdateProjectPayload {
+  name?: string;
+  userId?: string;
+  isActive?: boolean;
+}
+
+export interface IUpdateProjectResponse {
+  success: boolean;
+  message: string;
+  data: IProject;
+}
+
 export const getProjects = async (id: string): Promise<IGetProjectsResponse> => {
   return new Promise((resolve, reject) => {
     axiosInstance
@@ -51,6 +63,19 @@ export const createProjectAPI = async (payload: ICreateProjectPayload): Promise<
   return new Promise((resolve, reject) => {
     axiosInstance
       .post(PROJECT_URL, payload)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const updateProjectAPI = async (projectId: string, payload: IUpdateProjectPayload): Promise<IUpdateProjectResponse> => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .put(`${UPDATE_PROJECT_URL}/${projectId}`, payload)
       .then((res) => {
         resolve(res.data);
       })
