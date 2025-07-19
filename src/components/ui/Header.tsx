@@ -58,7 +58,7 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
 
   const shouldFetchProfile = (): boolean => {
     // If no profile data exists, fetch it
-    if (!user?.data?.userName || !user?.data?.email) {
+    if (!user?.data?.name || !user?.data?.email) {
       return true;
     }
     
@@ -160,7 +160,7 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
                   ) : (
                     <>
                       <span className="font-bold text-black text-sm mb-1 whitespace-pre-line">
-                        {user?.data?.userName ? user.data.userName.toUpperCase() : 'User'}
+                        {user?.data?.name ? user.data.name.toUpperCase() : 'User'}
                       </span>
                       <span className="text-black text-sm break-all mb-2">{user?.data?.email || 'No email available'}</span>
                     </>
@@ -214,7 +214,7 @@ const Header: FC<HeaderProps> = ({ className = '' }) => {
                 ) : (
                   <>
                     <span className="font-bold text-black text-xs mb-1 whitespace-pre-line">
-                      {user?.data?.userName ? user.data.userName.toUpperCase() : 'User'}
+                      {user?.data?.name ? user.data.name.toUpperCase() : 'User'}
                     </span>
                     <span className="text-black text-xs break-all mb-2">{user?.data?.email || 'No email available'}</span>
                   </>
