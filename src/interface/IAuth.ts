@@ -30,6 +30,17 @@ export interface IForgotPasswordResponse {
   message: string;
 }
 
+export interface IResetPasswordRequest {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface IResetPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface IUserSlice {
   data: null | ILoginResponse;
   isAuthenticated: boolean;
