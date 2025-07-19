@@ -187,7 +187,7 @@ const ProjectHistory: React.FC<ProjectHistoryProps> = ({ projects: propProjects 
         <div className="text-gray-500 text-center py-8">No projects found</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project, idx) => (
+          {filteredProjects.map((project) => (
             <div
               key={project._id}
               className="bg-[#faf7f2] border border-gray-200 rounded-xl shadow p-6 flex flex-col items-start hover:shadow-md transition cursor-pointer"
