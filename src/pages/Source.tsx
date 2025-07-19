@@ -6,6 +6,8 @@ import AuthModal from "../components/ui/AuthModal";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/hooks";
 import { createProjectAPI } from "../api/services";
+import { uniqueNamesGenerator, names, colors, animals } from "unique-names-generator";
+import type { Config } from "unique-names-generator";
 
 function Source() {
   const [message, setMessage] = useState("");
@@ -114,9 +116,18 @@ function Source() {
           return;
         }
 
-        // Call createProjectAPI with empty name and user ID
+        // Generate unique project name
+        const customConfig: Config = {
+          dictionaries: [names, colors, animals],
+          separator: '-',
+          length: 3,
+        };
+        
+        const uniqueProjectName = uniqueNamesGenerator(customConfig);
+
+        // Call createProjectAPI with generated name and user ID
         const response = await createProjectAPI({
-          name: "", // Empty name as requested
+          name: uniqueProjectName,
           userId: userId
         });
 
