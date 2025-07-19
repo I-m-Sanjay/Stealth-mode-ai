@@ -5,6 +5,7 @@ import ProjectHistory from "../components/ui/ProjectHistory";
 import AuthModal from "../components/ui/AuthModal";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/hooks";
+import { createProjectAPI } from "../api/services";
 
 function Source() {
   const [message, setMessage] = useState("");
@@ -18,7 +19,7 @@ function Source() {
   const navigate = useNavigate();
   
   // Get authentication state from Redux store
-  const { isAuthenticated } = useAppSelector((state) => state.user);
+  const { isAuthenticated, data: userData } = useAppSelector((state) => state.user);
 
   const placeholders = [
     "to build a landing page for your next big idea",
@@ -97,17 +98,35 @@ function Source() {
     // eslint-disable-next-line
   }, [selectedFiles]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!isAuthenticated) {
       setPendingPrompt(message);
       setShowAuthModal(true);
       return;
     }
     if (message.trim()) {
-      console.log("Send:", message);
-      setMessage("");
-      // Navigate to project page after sending
-      navigate("/project");
+      try {
+        // Get user ID from Redux store
+        const userId = isAuthenticated && userData?.data?._id;
+        
+        if (!userId) {
+          console.error("User ID not found");
+          return;
+        }
+
+        // Call createProjectAPI with empty name and user ID
+        const response = await createProjectAPI({
+          name: "", // Empty name as requested
+          userId: userId
+        });
+
+        console.log("Project created:", response);
+        setMessage("");
+        // Navigate to project page after creating project
+        navigate("/project");
+      } catch (error) {
+        console.error("Error creating project:", error);
+      }
     }
   };
 
