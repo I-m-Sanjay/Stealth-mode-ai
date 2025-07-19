@@ -338,7 +338,7 @@ function Workspace() {
                   <div
                     key={project._id}
                     className="bg-[#faf7f2] border border-gray-200 rounded-xl shadow p-6 flex flex-col items-start hover:shadow-md transition cursor-pointer relative"
-                    onClick={() => navigate(`/project/${project._id}`)}
+                    // onClick={() => navigate(`/project/${project._id}`)}
                   >
                     {/* Three-dot menu button */}
                     <div className="absolute top-3 right-3 project-menu-container">
