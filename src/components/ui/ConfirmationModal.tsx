@@ -1,4 +1,4 @@
-import React from 'react';
+ import React from 'react';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -39,12 +39,12 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 backdrop-blur-[2px] bg-white/5 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4">
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
         </div>
 
@@ -54,7 +54,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 flex gap-3 justify-end">
+        <div className="px-6 py-4 flex gap-3 justify-end">
           <button
             onClick={onClose}
             disabled={isLoading}

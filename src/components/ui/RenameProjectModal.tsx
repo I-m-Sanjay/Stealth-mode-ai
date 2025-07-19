@@ -54,7 +54,7 @@ const RenameProjectModal: React.FC<RenameProjectModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 backdrop-blur-[2px] bg-black/50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0  bg-black/50 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
