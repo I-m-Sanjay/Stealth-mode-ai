@@ -36,7 +36,7 @@ export const userSlice = createSlice({
         // Update the user data with profile information
         state.data.data = {
           ...state.data.data,
-          userName: action.payload.user.name,
+          name: action.payload.user.name,
           email: action.payload.user.email,
         };
       }
