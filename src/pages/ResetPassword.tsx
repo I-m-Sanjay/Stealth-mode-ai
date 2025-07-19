@@ -13,7 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { object, string, ref } from 'yup';
-import { ResetPassword as ResetPasswordAPI } from '../api/services/authService';
+import { ResetPasswordAPI } from '../api/services/authService';
 
 const resetPasswordValidationSchema = object().shape({
   newPassword: string()

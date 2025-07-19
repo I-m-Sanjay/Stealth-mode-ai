@@ -42,7 +42,7 @@ export const ForgotPassword = async (forgotPasswordPayload: IForgotPasswordReque
   });
 };
 
-export const ResetPassword = async (resetPasswordPayload: IResetPasswordRequest): Promise<IResetPasswordResponse> => {
+export const ResetPasswordAPI = async (resetPasswordPayload: IResetPasswordRequest): Promise<IResetPasswordResponse> => {
   return new Promise((resolve, reject) => {
     axiosInstance
       .post(RESET_PASSWORD_URL, resetPasswordPayload)
