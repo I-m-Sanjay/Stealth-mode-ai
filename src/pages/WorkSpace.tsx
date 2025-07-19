@@ -5,6 +5,7 @@ import { useAppSelector } from "../store/hooks";
 import { useNavigate } from "react-router-dom";
 import { getProjects, updateProjectAPI, type IProject } from "../api/services/projectService";
 import ConfirmationModal from "../components/ui/ConfirmationModal";
+import RenameProjectModal from "../components/ui/RenameProjectModal";
 import { toast } from 'react-toastify';
 
 const sortOptions = [
@@ -34,6 +35,11 @@ function Workspace() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // State for rename modal
+  const [showRenameModal, setShowRenameModal] = useState(false);
+  const [projectToRename, setProjectToRename] = useState<IProject | null>(null);
+  const [isRenaming, setIsRenaming] = useState(false);
 
   // Simple flag to prevent duplicate API calls in React Strict Mode
   const hasFetched = useRef(false);
@@ -126,6 +132,13 @@ function Workspace() {
     setOpenMenuId(null);
   };
 
+  const handleRenameClick = (project: IProject, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setProjectToRename(project);
+    setShowRenameModal(true);
+    setOpenMenuId(null);
+  };
+
   const handleConfirmDelete = async () => {
     if (!projectToDelete) return;
 
@@ -175,6 +188,61 @@ function Workspace() {
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setProjectToDelete(null);
+  };
+
+  const handleConfirmRename = async (newName: string) => {
+    if (!projectToRename) return;
+
+    setIsRenaming(true);
+    try {
+      const response = await updateProjectAPI(projectToRename._id, { name: newName });
+      if (response.success) {
+        // Update the project in the local state
+        setProjects(projects.map(project => 
+          project._id === projectToRename._id 
+            ? { ...project, name: newName }
+            : project
+        ));
+        setShowRenameModal(false);
+        setProjectToRename(null);
+        
+        // Show success toast
+        toast.success('Project Renamed successfully!', {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      } else {
+        toast.error('Failed to rename project: ' + response.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error renaming project:', error);
+      toast.error('Failed to rename project. Please try again.', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } finally {
+      setIsRenaming(false);
+    }
+  };
+
+  const handleCancelRename = () => {
+    setShowRenameModal(false);
+    setProjectToRename(null);
   };
 
   const filteredProjects = projects.filter((p) =>
@@ -287,7 +355,10 @@ function Workspace() {
                       {openMenuId === project._id && (
                         <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl z-50">
                           <div className="py-1">
-                            <button className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 transition-colors">
+                            <button 
+                              className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 transition-colors"
+                              onClick={(e) => handleRenameClick(project, e)}
+                            >
                               <svg className="w-4 h-4 mr-3 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                               </svg>
@@ -337,6 +408,15 @@ function Workspace() {
         cancelText="Cancel"
         confirmButtonColor="bg-red-600 hover:bg-red-700"
         isLoading={isDeleting}
+      />
+      
+      {/* Rename Project Modal */}
+      <RenameProjectModal
+        isOpen={showRenameModal}
+        onClose={handleCancelRename}
+        onConfirm={handleConfirmRename}
+        currentName={projectToRename?.name || ''}
+        isLoading={isRenaming}
       />
       
       {/* <Footer /> */}
