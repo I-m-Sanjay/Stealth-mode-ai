@@ -119,7 +119,7 @@ const ForgetPassword: FC = () => {
                         disabled={isLoading}
                         className="w-full sm:w-auto"
                       >
-                        {isLoading ? 'Processing...' : 'Reset Password'}
+                        {isLoading ? 'Submitting...' : 'Reset Password'}
                       </CustomButton>
                     </div>
                   </Form>
