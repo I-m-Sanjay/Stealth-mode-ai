@@ -125,10 +125,12 @@ function Source() {
         
         const uniqueProjectName = uniqueNamesGenerator(customConfig);
 
-        // Call createProjectAPI with generated name and user ID
+        // Call createProjectAPI with generated name, user ID, user message, and return type
         const response = await createProjectAPI({
           name: uniqueProjectName,
-          userId: userId
+          userId: userId,
+          userMessage: message.trim(),
+          returnType: "sse"
         });
 
         console.log("Project created:", response);

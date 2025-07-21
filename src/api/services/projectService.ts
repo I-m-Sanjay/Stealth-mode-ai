@@ -26,6 +26,8 @@ export interface IGetProjectsResponse {
 export interface ICreateProjectPayload {
   name: string;
   userId: string;
+  userMessage: string;
+  returnType: string;
 }
 
 export interface ICreateProjectResponse {
