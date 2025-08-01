@@ -7,3 +7,4 @@ export const RESET_PASSWORD_URL = '/auth/reset-password';
 export const GET_PROJECTS_URL = '/project/get-projects';
 export const PROJECT_URL = '/project';
 export const UPDATE_PROJECT_URL = '/project/update-project';
+export const GENERATE_CODE_URL = '/project/generate-code';

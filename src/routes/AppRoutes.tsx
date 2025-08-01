@@ -23,7 +23,7 @@ const AppRoutes = () => {
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       
       {/* Protected Routes */}
-      <Route path="/project" element={isAuthenticated ? <Project /> : <Navigate to="/login" replace />} />
+      <Route path="/project/:projectId" element={isAuthenticated ? <Project /> : <Navigate to="/login" replace />} />
       <Route path="/workspace" element={isAuthenticated ? <WorkSpace /> : <Navigate to="/login" replace />} />
       
       {/* Catch all route */}

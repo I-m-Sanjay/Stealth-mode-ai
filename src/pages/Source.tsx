@@ -5,7 +5,7 @@ import ProjectHistory from "../components/ui/ProjectHistory";
 import AuthModal from "../components/ui/AuthModal";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/hooks";
-import { createProjectAPI } from "../api/services";
+import { createProjectAPI, generateCodeAPI } from "../api/services";
 import { uniqueNamesGenerator, names, colors, animals } from "unique-names-generator";
 import type { Config } from "unique-names-generator";
 
@@ -18,6 +18,9 @@ function Source() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [pendingPrompt, setPendingPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [currentLoadingIndex, setCurrentLoadingIndex] = useState(0);
+  const [displayedLoadingText, setDisplayedLoadingText] = useState("");
   const navigate = useNavigate();
   
   // Get authentication state from Redux store
@@ -30,6 +33,15 @@ function Source() {
     "to develop a task management web app",
     "to design a sleek portfolio website",
     "to build a real-time chat application"
+  ];
+
+  const loadingMessages = [
+    "Generating the Front end code",
+    "Generating the Backend code",
+    "Setting up the database",
+    "Configuring the API endpoints",
+    "Optimizing the performance",
+    "Finalizing your project"
   ];
 
   useEffect(() => {
@@ -73,6 +85,42 @@ function Source() {
     return () => clearInterval(typeInterval);
   }, [currentPlaceholderIndex]);
 
+  // Loading text animation effect
+  useEffect(() => {
+    if (!isGenerating) return;
+
+    const currentLoadingMessage = loadingMessages[currentLoadingIndex];
+    let currentIndex = 0;
+    
+    const typeInterval = setInterval(() => {
+      if (currentIndex <= currentLoadingMessage.length) {
+        setDisplayedLoadingText(currentLoadingMessage.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typeInterval);
+        // Wait a bit before starting to delete
+        setTimeout(() => {
+          const deleteInterval = setInterval(() => {
+            if (currentIndex > 0) {
+              setDisplayedLoadingText(currentLoadingMessage.slice(0, currentIndex - 1));
+              currentIndex--;
+            } else {
+              clearInterval(deleteInterval);
+              // Move to next loading message after deletion is complete
+              setTimeout(() => {
+                setCurrentLoadingIndex((prevIndex) => 
+                  (prevIndex + 1) % loadingMessages.length
+                );
+              }, 300); // Brief pause before next message
+            }
+          }, 30); // Delete speed (faster than placeholder)
+        }, 1000); // Wait time before deleting (shorter than placeholder)
+      }
+    }, 60); // Type speed (faster than placeholder)
+
+    return () => clearInterval(typeInterval);
+  }, [currentLoadingIndex, isGenerating]);
+
   // Generate previews for image files
   useEffect(() => {
     const newPreviews: string[] = [];
@@ -107,6 +155,7 @@ function Source() {
       return;
     }
     if (message.trim()) {
+      setIsGenerating(true);
       try {
         // Get user ID from Redux store
         const userId = isAuthenticated && userData?.data?._id;
@@ -125,20 +174,43 @@ function Source() {
         
         const uniqueProjectName = uniqueNamesGenerator(customConfig);
 
-        // Call createProjectAPI with generated name, user ID, user message, and return type
+        // Call createProjectAPI with generated name and user ID
         const response = await createProjectAPI({
           name: uniqueProjectName,
-          userId: userId,
-          userMessage: message.trim(),
-          returnType: "sse"
+          userId: userId
         });
 
         console.log("Project created:", response);
+
+        // Call generateCodeAPI with the created project ID and user message
+        const generateCodeResponse = await generateCodeAPI({
+          returnType: "sse",
+          userMessage: message.trim(),
+          projectId: response.data._id
+        });
+
+        console.log("Code generation response:", generateCodeResponse);
+        console.log("Code generation response structure:", {
+          hasData: !!generateCodeResponse.data,
+          hasReturnResponse: !!generateCodeResponse.data?.returnResponse,
+          hasFrontend: !!generateCodeResponse.data?.returnResponse?.frontend,
+          hasBackend: !!generateCodeResponse.data?.returnResponse?.backend,
+          frontendPath: generateCodeResponse.data?.returnResponse?.frontend?.frontendCodeUpdates?.explanations,
+          backendPath: generateCodeResponse.data?.returnResponse?.backend?.backendCodeUpdates?.explanations
+        });
         setMessage("");
-        // Navigate to project page after creating project
-        navigate("/project");
+        
+        // Navigate to project page after creating project with response data
+        navigate(`/project/${response.data._id}`, { 
+          state: { 
+            projectData: generateCodeResponse,
+            userMessage: message.trim()
+          } 
+        });
       } catch (error) {
         console.error("Error creating project:", error);
+      } finally {
+        setIsGenerating(false);
       }
     }
   };
@@ -169,6 +241,40 @@ function Source() {
         open={showAuthModal}
         onClose={() => setShowAuthModal(false)}
       />
+      
+      {/* Loading Screen */}
+      {isGenerating && (
+        <div className="fixed inset-0 bg-[#0090c4] bg-opacity-95 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-xl text-center">
+            <div className="flex flex-col items-center space-y-4">
+              {/* Animated loading spinner */}
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-gray-200 border-t-[#0090c4] rounded-full animate-spin"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-8 h-8 bg-[#0090c4] rounded-full animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Loading text */}
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-gray-900">Generating...</h2>
+                <p className="text-gray-600 text-sm min-h-[20px]">
+                  {displayedLoadingText}
+                  <span className="animate-pulse">|</span>
+                </p>
+              </div>
+              
+              {/* Progress dots */}
+              <div className="flex space-x-2">
+                <div className="w-2 h-2 bg-[#0090c4] rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-[#0090c4] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-[#0090c4] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="flex-1 flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col items-center mb-4 sm:mb-6 lg:mb-8 mt-15">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 flex items-center gap-2 text-center">
@@ -218,9 +324,12 @@ function Source() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={`Ask Stealth AI ${displayedPlaceholder}`}
-            className="w-full resize-none bg-transparent text-sm sm:text-base focus:outline-none"
+            disabled={isGenerating}
+            className={`w-full resize-none bg-transparent text-sm sm:text-base focus:outline-none ${
+              isGenerating ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
+              if (e.key === "Enter" && !e.shiftKey && !isGenerating) {
                 e.preventDefault();
                 handleSend();
               }
@@ -231,7 +340,12 @@ function Source() {
             <div className="flex gap-1 sm:gap-2">
               <button
                 type="button"
-                className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#f9f6f1] shadow border border-[#ece8e0] hover:bg-[#f3f0eb] transition relative"
+                disabled={isGenerating}
+                className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full shadow border transition relative ${
+                  isGenerating 
+                    ? 'bg-gray-200 border-gray-300 cursor-not-allowed' 
+                    : 'bg-[#f9f6f1] border-[#ece8e0] hover:bg-[#f3f0eb]'
+                }`}
                 style={{ boxShadow: "0 2px 8px 0 rgba(0,0,0,0.04)" }}
                 onClick={handleAddFiles}
               >
@@ -245,13 +359,22 @@ function Source() {
 
             <button
               onClick={handleSend}
-              className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-gray-400 hover:bg-gray-500"
+              disabled={isGenerating}
+              className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-colors ${
+                isGenerating 
+                  ? 'bg-gray-300 cursor-not-allowed' 
+                  : 'bg-gray-400 hover:bg-gray-500'
+              }`}
             >
-              <svg width="16" height="16" className="sm:w-5 sm:h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="10" cy="10" r="10" fill="none" />
-                <path d="M10 4V16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                <path d="M4 10L10 4L16 10" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
+              {isGenerating ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <svg width="16" height="16" className="sm:w-5 sm:h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="10" fill="none" />
+                  <path d="M10 4V16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M4 10L10 4L16 10" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              )}
             </button>
           </div>
 
@@ -270,6 +393,7 @@ function Source() {
         {isAuthenticated && (
           <ProjectHistory />
         )}
+      
       </div>
     </div>
   );
